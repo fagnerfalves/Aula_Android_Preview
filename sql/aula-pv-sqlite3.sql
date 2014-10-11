@@ -2,7 +2,7 @@
 -- Author:        Felipe Lugão Eccard
 -- Caption:       New Model
 -- Project:       Name of the project
--- Changed:       2014-10-11 02:35
+-- Changed:       2014-10-11 18:24
 -- Created:       2014-10-11 00:12
 PRAGMA foreign_keys = OFF;
 
@@ -13,7 +13,6 @@ DROP TABLE IF EXISTS "Disciplina";
 
 CREATE TABLE IF NOT EXISTS "Disciplina"(
   "_id" INTEGER PRIMARY KEY NOT NULL,
-  "curso" VARCHAR(45),
   "professor" VARCHAR(45),
   "nome" VARCHAR(45),
   "cargahoraria" INTEGER,

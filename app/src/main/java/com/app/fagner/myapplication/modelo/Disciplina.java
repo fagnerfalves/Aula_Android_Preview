@@ -5,7 +5,6 @@ package com.app.fagner.myapplication.modelo;
  */
 public class Disciplina {
     int codigo;
-    int curso;
     String professor;
     String nome;
     int carga;
@@ -14,7 +13,6 @@ public class Disciplina {
 
     public Disciplina(int codigo, int curso, String professor, String nome, int carga, int periodo, String horario) {
         this.codigo = codigo;
-        this.curso = curso;
         this.professor = professor;
         this.nome = nome;
         this.carga = carga;
@@ -28,14 +26,6 @@ public class Disciplina {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
-    }
-
-    public int getCurso() {
-        return curso;
-    }
-
-    public void setCurso(int curso) {
-        this.curso = curso;
     }
 
     public String getProfessor() {
