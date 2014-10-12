@@ -1,10 +1,15 @@
 package com.app.fagner.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.app.fagner.myapplication.modelo.Noticia;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -103,6 +108,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         dbQuery = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
 
 
+    }
+
+    public void criatNoticia(Noticia noticia){
+        Log.i("entrando no criarção da noticia", "entrando criação noticiaaaaaaaaaaaaaaaa");
+        this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("_id",noticia.getCodigo());
+        values.put("titulo",noticia.getTitulo());
+        values.put("data",noticia.getData());
+        values.put("hora",noticia.getHora());
+        values.put("conteudo",noticia.getConteudo());
+        values.put("visualizar",noticia.getVisualizar());
+        try{
+            dbQuery.insert("Noticia",null,values);
+        }catch (SQLException e){
+            Log.i(e.toString(),e.toString());
+        }
+    }
+    public void setVisualizarNoticia1(int codigo){
+        dbQuery.execSQL("UPDATE Noticia SET visualizar = '1' where _id =" + String.valueOf(codigo));
+    }
+
+    public int getVisualizarNoticia(int codigo){
+        String[] whereArgs = new String[] { String.valueOf(codigo)};
+        Cursor cursor = dbQuery.rawQuery("SELECT visualizar FROM Noticia where _id = ?",whereArgs);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
     }
 
 }

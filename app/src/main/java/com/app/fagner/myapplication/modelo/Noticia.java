@@ -1,14 +1,17 @@
 package com.app.fagner.myapplication.modelo;
 
+import java.io.Serializable;
+
 /**
  * Created by eccard on 10/11/14.
  */
-public class Noticia {
+public class Noticia implements Serializable{
     int codigo;
     String titulo;
     String conteudo;
     String data;
     String hora;
+    int visualizar;
 
     public Noticia(int codigo, String titulo, String conteudo, String data, String hora) {
         this.codigo = codigo;
@@ -16,6 +19,14 @@ public class Noticia {
         this.conteudo = conteudo;
         this.data = data;
         this.hora = hora;
+    }
+
+    public int getVisualizar() {
+        return visualizar;
+    }
+
+    public void setVisualizar(int visualizar) {
+        this.visualizar = visualizar;
     }
 
     public int getCodigo() {
