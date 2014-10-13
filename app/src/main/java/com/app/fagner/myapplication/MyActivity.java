@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,11 +18,13 @@ import android.support.v4.widget.DrawerLayout;
 import com.app.fagner.myapplication.modelo.FragmentListener;
 import com.app.fagner.myapplication.modelo.Noticia;
 
+import java.io.IOException;
+
 
 public class MyActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,FragmentListener {
 
-    static DataBaseHelper dataBaseHelper;
+    static DataBaseHelper db;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -36,6 +40,13 @@ public class MyActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
 
+        db= new DataBaseHelper(getApplicationContext());
+        try {
+            db.CriarDataBase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        db.abrirDataBase();
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -160,8 +171,25 @@ public class MyActivity extends ActionBarActivity
 
     @Override
     public void callbackNoticia(Noticia noticia) {
-        getActionBar().setTitle("Noticia");
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, FragmentNoticia.newInstance(noticia)).commit();
+//        getActionBar().setTitle("Noticia");
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, FragmentNoticia.newInstance(noticia))
+                .commit();
+
+//        getSupportFragmentManager().beginTransaction().replace(R.id.container, FragmentNoticia.newInstance(noticia)).commit();
 
     }
+
+
+    @Override
+    public void callbackNoticias() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container,new  FragmentNoticias())
+                .commit();
+
+    }
+
 }

@@ -15,19 +15,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by fagner on 11/10/14.
  */
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-    private static String DB_PATH="/data/data/com.example.myapplication/";
+    private static String DB_PATH="/data/data/com.app.fagner.myapplication/";
     private static String DB_NAME = "banco.db";
     public SQLiteDatabase dbQuery;
     private final Context dbContexto;
 
-    public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DataBaseHelper(Context context) {
+        super(context, DB_NAME, null, 1);
         dbContexto=context;
     }
 
@@ -127,6 +128,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             Log.i(e.toString(),e.toString());
         }
     }
+
+
     public void setVisualizarNoticia1(int codigo){
         dbQuery.execSQL("UPDATE Noticia SET visualizar = '1' where _id =" + String.valueOf(codigo));
     }
@@ -138,4 +141,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor.getInt(0);
     }
 
+    public ArrayList<Noticia> getNoticias() {
+
+        ArrayList<Noticia> noticias = new ArrayList<Noticia>();
+
+        Cursor cursor = dbQuery.rawQuery("select * from Noticia", null);
+        // codigo,assunto,dataExpedida,horaExpedida,cursoRelacionado,descricao
+        if (cursor.moveToFirst()) {
+            do {
+                noticias.add(new Noticia(cursor.getInt(0), cursor.getString(1),
+                        cursor.getString(2), cursor.getString(3),cursor.getString(4)));
+            } while (cursor.moveToNext());
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return noticias;
+    }
+    public int getCodigoUltimaNoticia(){
+        Cursor cursor = dbQuery.rawQuery("SELECT MAX(_id) FROM Noticia",null);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
 }

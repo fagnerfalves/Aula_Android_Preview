@@ -1,5 +1,8 @@
 package com.app.fagner.myapplication;
 
+import android.app.Activity;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -31,6 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+//import android.R;
 
 //import recode.appro.conexao.JSONParser;
 //import recode.appro.controlador.ControladorNoticia;
@@ -42,7 +46,7 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
 //	List<Noticia> noticias = new ArrayList<Noticia>();
 	ListView listViewNoticias;
 	AdapterItemNoticias listViewAdapter;
-    ControladorNoticia controladorNoticia;
+//    ControladorNoticia controladorNoticia;
     // Progress Dialog
     private ProgressDialog pDialog;
     // Creating JSON Parser object
@@ -53,12 +57,12 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
     // JSON Node names
     private static final String TAG_SUCCESSO = "sucesso";
     private static final String TAG_NOTICIAS = "noticias";
-    private static final String TAG_CODIGO = "codigo";
-    private static final String TAG_ASSUNTO = "assunto";
-    private static final String TAG_DESCRICAO = "descricao";
+    private static final String TAG__ID = "_id";
+    private static final String TAG_TITULO = "titulo";
+    private static final String TAG_CONTEUDO = "conteudo";
     private static final String TAG_DATA = "data";
     private static final String TAG_HORA = "hora";
-    private static final String TAG_CURSORELACIONADO = "cursoRelacionado";
+//    private static final String TAG_CURSORELACIONADO = "cursoRelacionado";
 
     // products JSONArray
     JSONArray jnoticias = null;
@@ -72,9 +76,9 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		getActivity().getActionBar().setTitle("Notícias");
-		getActivity().getActionBar().setSubtitle(null);
-		
+//		getActivity().getActionBar().setTitle("Notícias");
+//		getActivity().getActionBar().setSubtitle(null);
+		Log.i("FragmentNoticia","FragmentNoticia");
 		View view = inflater.inflate(R.layout.fragment_list_view_generica,
 				container, false);
 
@@ -96,14 +100,14 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
+//        controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
 
         listViewAdapter.getNoticias().get(position).setVisualizar(1);
-        controladorNoticia.setVisualizarNoticia1(listViewAdapter.getNoticias().get(position).getCodigo());
-
+//        controladorNoticia.setVisualizarNoticia1(listViewAdapter.getNoticias().get(position).getCodigo());
+        MyActivity.db.setVisualizarNoticia1(listViewAdapter.getNoticias().get(position).getCodigo());
         Noticia noticia = listViewAdapter.getNoticias().get(position);
 
-        listViewAdapter.getNoticias().get(position).setVisualizar(1);
+//        listViewAdapter.getNoticias().get(position).setVisualizar(1);
 
         fragmentListener.callbackNoticia(noticia);
 
@@ -113,6 +117,18 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
 //        frgManager.addToBackStack(null);
 //        frgManager.commit();
 
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            fragmentListener = (FragmentListener) activity;
+
+        }catch (ClassCastException e)
+        {
+            throw new ClassCastException(activity.toString() + " deve implementar FragmentListener");
+
+        }
     }
 
     @Override
@@ -165,10 +181,12 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
         protected String doInBackground(String... args) {
 
 
-            ControladorNoticia controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
-            int codigoultimoNoticia = controladorNoticia.getCodigoUltimaNoticia();
+//            ControladorNoticia controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
+
+//            int codigoultimoNoticia = controladorNoticia.getCodigoUltimaNoticia();
+                        int codigoultimoNoticia = MyActivity.db.getCodigoUltimaNoticia();
 //            Log.i("pegar o ultimo evento",String.valueOf(codigoultimoNoticia));
-            controladorNoticia = null;
+//            controladorNoticia = null;
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -193,20 +211,20 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
                         JSONObject c = jnoticias.getJSONObject(i);
 
                         // Storing each json item in variable
-                        int codigo = c.getInt(TAG_CODIGO);
-                        String assunto = c.getString(TAG_ASSUNTO);
-                        String descricao = c.getString(TAG_DESCRICAO);
+                        int _id = c.getInt(TAG__ID);
+                        String titulo = c.getString(TAG_TITULO);
+                        String conteudo = c.getString(TAG_CONTEUDO);
                         String data = c.getString(TAG_DATA);
                         String hora = c.getString(TAG_HORA);
-                        int curoRelacionado = c.getInt(TAG_CURSORELACIONADO);
+//                        int curoRelacionado = c.getInt(TAG_CURSORELACIONADO);
 
-                        Noticia noticia = new Noticia(codigo,assunto,data,hora,curoRelacionado,descricao);
+                        Noticia noticia = new Noticia(_id,titulo,conteudo,data,hora);
                         //jogar pro banco de dados
                         // exibir notificação
 
-                        controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
-                        controladorNoticia.criarNoticia(noticia);
-
+//                        controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
+//                        controladorNoticia.criarNoticia(noticia);
+                        MyActivity.db.criatNoticia(noticia);
                         generateNotification(noticia);
 
 

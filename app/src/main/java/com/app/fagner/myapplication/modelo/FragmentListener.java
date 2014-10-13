@@ -6,5 +6,5 @@ package com.app.fagner.myapplication.modelo;
 public interface FragmentListener {
 
     public void callbackNoticia(Noticia  noticia);
-
+    public void callbackNoticias();
 }

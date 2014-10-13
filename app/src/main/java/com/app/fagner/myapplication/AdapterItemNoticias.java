@@ -2,6 +2,8 @@ package com.app.fagner.myapplication;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.app.fagner.myapplication.modelo.Noticia;
 import java.util.ArrayList;
 import java.util.List;
 
+
 //import recode.appro.controlador.ControladorNoticia;
 //import recode.appro.model.Noticia;
 
@@ -20,16 +23,17 @@ public class AdapterItemNoticias extends BaseAdapter {
 
 	Context context;
 	List<Noticia> noticias = new ArrayList<Noticia>();
-	ControladorNoticia controladorNoticia;
+//	ControladorNoticia controladorNoticia;
 	
 	public AdapterItemNoticias( Context context) {
 		
 		this.context = context;
-		this.controladorNoticia = new ControladorNoticia(context);
-        MyActivity
+//		this.controladorNoticia = new ControladorNoticia(context);
+//        MyActivity
 		if(noticias.size()==0){
-            this.noticias = controladorNoticia.getNoticias();
-
+            this.noticias = MyActivity.db.getNoticias();
+            Log.i("pegou  o array de noticia", "pegou  o array de noticia");
+//            Log.i(noticias.get(1).getConteudo(),noticias.get(1).getTitulo());
         }
 	}
 	
@@ -58,17 +62,18 @@ public class AdapterItemNoticias extends BaseAdapter {
 		
 		// Altera a cor de fundo para cada item par da lista de notícias  
 		if(position%2 == 0){
-			view.setBackgroundResource(R.color.White);
-		}
+//            view.setBackgroundResource(R.color.LightCyan);
+            view.setBackgroundResource(R.color.Lavender);
+        }
 
 		
 		TextView assunto = (TextView) view.findViewById(R.id.textview_noticia);
 		TextView data = (TextView) view.findViewById(R.id.textview_noticia_data);
 		TextView hora = (TextView) view.findViewById(R.id.textView_noticia_hora);
 		
-	    assunto.setText(noticias.get(position).getAssunto());
-		data.setText(noticias.get(position).getDataexpedida());
-		hora.setText(noticias.get(position).getHoraexpedida());
+	    assunto.setText(noticias.get(position).getTitulo());
+		data.setText(noticias.get(position).getData());
+		hora.setText(noticias.get(position).getHora());
 
         if(noticias.get(position).getVisualizar()==0){
             assunto.setTextColor(Color.BLUE);
