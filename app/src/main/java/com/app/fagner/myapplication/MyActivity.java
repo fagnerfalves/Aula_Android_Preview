@@ -182,7 +182,6 @@ public class MyActivity extends ActionBarActivity
 
     }
 
-
     @Override
     public void callbackNoticias() {
         FragmentManager fragmentManager = getSupportFragmentManager();
