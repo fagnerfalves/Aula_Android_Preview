@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -11,29 +11,54 @@
         android:text="Matricula:"
         android:id="@+id/textView"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp" />
+        android:layout_marginLeft="23dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <EditText
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editTextMatricula"
         android:layout_gravity="center_vertical"
         android:layout_weight="613.47"
         android:inputType="number"
         android:maxLength="8"
-        android:hint="11160018" />
+        android:hint="11160018"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_toRightOf="@+id/textView" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="85dp"
-        android:layout_height="232dp"
-        android:layout_gravity="bottom">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ok"
+        android:id="@+id/button"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignRight="@+id/editTextMatricula"
+        android:layout_alignEnd="@+id/editTextMatricula" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ok"
-            android:id="@+id/button" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Nick:"
+        android:id="@+id/textView3"
+        android:layout_toStartOf="@+id/editTextMatricula"
+        android:layout_above="@+id/editTextMatricula"
+        android:layout_toLeftOf="@+id/editTextMatricula"
+        android:layout_marginBottom="50dp" />
 
-</LinearLayout>
+    <EditText
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextNick"
+        android:layout_alignBottom="@+id/textView3"
+        android:layout_toRightOf="@+id/textView3"
+        android:layout_toEndOf="@+id/textView3"
+        android:layout_alignRight="@+id/editTextMatricula"
+        android:layout_alignEnd="@+id/editTextMatricula" />
+
+</RelativeLayout>

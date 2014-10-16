@@ -1,8 +1,6 @@
-package com.app.fagner.myapplication;
+package com.app.fagner.myapplication.evento.view;
 
 import android.app.Activity;
-//import android.support.v7.app.ActionBarActivity;
-//import android.support.v7.app.ActionBar;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -10,7 +8,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-//import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -23,9 +20,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.app.fagner.myapplication.MyActivity;
+import com.app.fagner.myapplication.R;
 import com.app.fagner.myapplication.conexao.JSONParser;
+import com.app.fagner.myapplication.modelo.Evento;
 import com.app.fagner.myapplication.modelo.FragmentListener;
-import com.app.fagner.myapplication.modelo.Noticia;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -35,82 +34,93 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-//import android.R;
 
 //import recode.appro.conexao.JSONParser;
-//import recode.appro.controlador.ControladorNoticia;
-//import recode.appro.model.Noticia;
+//import recode.appro.evento.Evento;
+//import recode.appro.evento.controle.ControladorEvento;
+//import recode.appro.main.FragmentListener;
+//import recode.appro.main.view.ActivityPesquisa;
+//import recode.appro.main.view.NavigationDrawer;
+//import recode.appro.telas.R;
 
-public class FragmentNoticias extends Fragment implements AdapterView.OnItemClickListener {
-    private FragmentListener fragmentListener;
 
-//	List<Noticia> noticias = new ArrayList<Noticia>();
-	ListView listViewNoticias;
-	AdapterItemNoticias listViewAdapter;
-//    ControladorNoticia controladorNoticia;
+/**
+ * Created by eccard on 09/07/14.
+ */
+public class FragmentEventos extends Fragment implements AdapterView.OnItemClickListener {
+    //    ArrayList<Evento> eventos = new ArrayList<Evento>();
+//    List<Evento> eventos = new ArrayList<Evento>();
+    ListView listViewEventos;
+    AdapterItemEventos listViewAdapter;
+
     // Progress Dialog
     private ProgressDialog pDialog;
     // Creating JSON Parser object
     JSONParser jParser = new JSONParser();
     ArrayList<HashMap<String, String>> eventosList;
-    private static String url_all_noticias = "http://10.0.0.104/aproWS/noticias/listarultimasnoticias.php";
+    private static String url_all_eventoss = "http://10.0.0.104/aproWS/eventos/listarultimoseventos.php";
 
     // JSON Node names
     private static final String TAG_SUCCESSO = "sucesso";
-    private static final String TAG_NOTICIAS = "noticias";
-    private static final String TAG__ID = "_id";
-    private static final String TAG_TITULO = "titulo";
-    private static final String TAG_CONTEUDO = "conteudo";
+    private static final String TAG_EVENTOS = "eventos";
+    private static final String TAG_CODIGO = "codigo";
+    private static final String TAG_NOME = "nome";
+    private static final String TAG_ORGANIZADORES = "organizadores";
+    private static final String TAG_DESCRICAO = "descricao";
+    private static final String TAG_LOCAL = "local";
     private static final String TAG_DATA = "data";
     private static final String TAG_HORA = "hora";
-//    private static final String TAG_CURSORELACIONADO = "cursoRelacionado";
 
     // products JSONArray
-    JSONArray jnoticias = null;
+    JSONArray jeventos = null;
     // eventos novos vindo do servidos
-    ArrayList<Noticia> listaNovasNoticias;
+    ArrayList<Evento> listaNovosEventos;
 
-	public FragmentNoticias() {
-	}
+    private FragmentListener fragmentListener;
+    public FragmentEventos() {
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-//		getActivity().getActionBar().setTitle("Notícias");
-//		getActivity().getActionBar().setSubtitle(null);
-		Log.i("FragmentNoticia","FragmentNoticia");
-		View view = inflater.inflate(R.layout.fragment_list_view_generica,
-				container, false);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+//        getActivity().getActionBar().setTitle("Eventos");
+//        getActivity().getActionBar().setSubtitle(null);
+        View view = inflater.inflate(R.layout.fragment_list_view_generica,
+                container, false);
 
         // Hashmap for ListView
-//        noticiasList = new ArrayList<HashMap<String, String>>();
+//        eventosList = new ArrayList<HashMap<String, String>>();
 
         // Loading products in Background Thread
 //        new LoadAllProducts().execute();
 
 
-        listViewAdapter = new AdapterItemNoticias(getActivity()
-				.getApplicationContext());
-		listViewNoticias = (ListView) view.findViewById(R.id.listView_generica);
-		listViewNoticias.setAdapter(listViewAdapter);
+        listViewAdapter = new AdapterItemEventos( getActivity()
+                .getApplicationContext());
+        listViewEventos = (ListView) view.findViewById(R.id.listView_generica);
+        listViewEventos.setAdapter(listViewAdapter);
+        listViewEventos.setOnItemClickListener(this);
 
-        listViewNoticias.setOnItemClickListener(this);
-		return view;
-	}
+
+    return view;
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.i("akiii",String.valueOf(position));
+        Evento evento = listViewAdapter.getEventos().get(position);
+        /*
+        Fragment fragmentEvento = new FragmentEvento(evento);
+        FragmentTransaction frgManager = getFragmentManager().beginTransaction();
+        frgManager.replace(R.id.content_frame,fragmentEvento);
+        frgManager.addToBackStack(null);
+        frgManager.commit();
+        */
+        fragmentListener.callbackEvento(evento);
 
-        listViewAdapter.getNoticias().get(position).setVisualizar(1);
-        MyActivity.db.setVisualizarNoticia1(listViewAdapter.getNoticias().get(position).getCodigo());
-        Noticia noticia = listViewAdapter.getNoticias().get(position);
-
-//        listViewAdapter.getNoticias().get(position).setVisualizar(1);
-
-        fragmentListener.callbackNoticia(noticia);
 
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -125,33 +135,32 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-		inflater.inflate(R.menu.global, menu);
-	    super.onCreateOptionsMenu(menu,inflater);
-	}
+        inflater.inflate(R.menu.global, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		switch (item.getItemId()) {
+        switch (item.getItemId()) {
 
-    //		case R.id.action_pesquisa:
-    //			Intent intent = new Intent(getActivity(), ActivityPesquisa.class);
-    //			startActivity(intent);
-    //			break;
+//            case R.id.sear:
+//                Intent intent = new Intent(getActivity(), ActivityPesquisa.class);
+//                startActivity(intent);
+//                break;
 
-		default:
-			break;
-		}
-
-		return false;
-	}
+            default:
+                break;
+        }
+        return false;
+    }
 
     /**
      * Background Async Task to Load all product by making HTTP Request
      * */
-    class CarregarNoticias extends AsyncTask<String, String, String> {
+    class LoadAllProducts extends AsyncTask<String, String, String> {
         private NotificationManager mNotificationManager;
         private int numMessages = 0;
         /**
@@ -161,30 +170,31 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
         protected void onPreExecute() {
             super.onPreExecute();
             pDialog = new ProgressDialog(getActivity());
-            pDialog.setMessage("Loading noticias. Please wait...");
+            pDialog.setMessage("Loading eventos. Please wait...");
             pDialog.setIndeterminate(false);
             pDialog.setCancelable(false);
             pDialog.show();
 
+
+
         }
 
         /**
-         * getting All noticias from url
+         * getting All products from url
          * */
         protected String doInBackground(String... args) {
 
 
-//            ControladorNoticia controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
-
-//            int codigoultimoNoticia = controladorNoticia.getCodigoUltimaNoticia();
-                        int codigoultimoNoticia = MyActivity.db.getCodigoUltimaNoticia();
-//            Log.i("pegar o ultimo evento",String.valueOf(codigoultimoNoticia));
-//            controladorNoticia = null;
+//            ControladorEvento controladorEvento = new ControladorEvento(getActivity().getApplicationContext());
+//            int codigoultimoevento = controladorEvento.getCodigoUltimoEvento();
+            int codigoultimoevento = MyActivity.db.getCodigoUltimoEvento();
+            Log.i("pegar o ultimo evento",String.valueOf(codigoultimoevento));
+//            controladorEvento = null;
 
             // Building Parameters
             List<NameValuePair> params = new ArrayList<NameValuePair>();
             // getting JSON string from URL
-            JSONObject json = jParser.makeHttpRequest(url_all_noticias + "?codigo=" + String.valueOf(codigoultimoNoticia), "GET",params);
+            JSONObject json = jParser.makeHttpRequest(url_all_eventoss + "?codigo=" + String.valueOf(codigoultimoevento), "GET",params);
 
             // Check your log cat for JSON reponse
             Log.d("All Products: ", json.toString());
@@ -197,32 +207,30 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
                     // products found
                     // Getting Array of Products
 //                    Log.i("json de eventos array",json.toString());
-                    jnoticias = json.getJSONArray(TAG_NOTICIAS);
-                    listaNovasNoticias = new ArrayList<Noticia>();
+                    jeventos = json.getJSONArray(TAG_EVENTOS);
+                    listaNovosEventos = new ArrayList<Evento>();
                     // looping through All Products
-                    for (int i = 0; i < jnoticias.length(); i++) {
-                        JSONObject c = jnoticias.getJSONObject(i);
+                    for (int i = 0; i < jeventos.length(); i++) {
+                        JSONObject c = jeventos.getJSONObject(i);
 
                         // Storing each json item in variable
-                        int _id = c.getInt(TAG__ID);
-                        String titulo = c.getString(TAG_TITULO);
-                        String conteudo = c.getString(TAG_CONTEUDO);
+                        int codigo = c.getInt(TAG_CODIGO);
+                        String nome = c.getString(TAG_NOME);
+                        String organizadores = c.getString(TAG_ORGANIZADORES);
+                        String descricao = c.getString(TAG_DESCRICAO);
+                        String local = c.getString(TAG_LOCAL);
                         String data = c.getString(TAG_DATA);
                         String hora = c.getString(TAG_HORA);
-//                        int curoRelacionado = c.getInt(TAG_CURSORELACIONADO);
 
-                        Noticia noticia = new Noticia(_id,titulo,conteudo,data,hora);
+                        Evento evento = new Evento(codigo,nome,descricao,organizadores,local,data,hora);
                         //jogar pro banco de dados
                         // exibir notificação
+//                        controladorEvento = new ControladorEvento(getActivity().getApplicationContext());
+//                        controladorEvento.criarEvento(evento);
+                        MyActivity.db.criarEvento(evento);
+                        generateNotification(evento);
 
-//                        controladorNoticia = new ControladorNoticia(getActivity().getApplicationContext());
-//                        controladorNoticia.criarNoticia(noticia);
-                        MyActivity.db.criatNoticia(noticia);
-                        generateNotification(noticia);
-
-
-                        listaNovasNoticias.add(noticia);
-
+                        listaNovosEventos.add(evento);
                         // creating new HashMap
 //                        HashMap<String, String> map = new HashMap<String, String>();
 
@@ -236,7 +244,7 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
 //                        Log.i("passou aki",eventosList.get(i).toString());
                     }
                 } else {
-                    Log.i("passou aki zeroo ", "teste");
+                        Log.i("passou aki zeroo ","teste");
 
                     /*
                     // no products found
@@ -259,18 +267,17 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
          * After completing background task Dismiss the progress dialog
          * **/
 
-        protected void onPostExecute(String file_url) {
+         protected void onPostExecute(String file_url) {
             // dismiss the dialog after getting all products
             pDialog.dismiss();
             // updating UI from Background Thread
-            if(listaNovasNoticias!=null) {
-                listViewAdapter.concatenarArrayDeNoticias(listaNovasNoticias);
-            }
-//            listaNovasNoticias.clear();
-            listViewNoticias.setAdapter(listViewAdapter);
-            //for(int i=0;i<eventosList.size();i++){
-            //    Log.i("todos",eventosList.get(i).toString());
-            //}
+             if(listaNovosEventos!=null) {
+                 listViewAdapter.concatenarArrayDeEventos(listaNovosEventos);
+             }
+             listViewEventos.setAdapter(listViewAdapter);
+             //for(int i=0;i<eventosList.size();i++){
+             //    Log.i("todos",eventosList.get(i).toString());
+             //}
 
 //            Log.i("array",eventosList.get(1).toString());
              /*
@@ -291,9 +298,8 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
              */
 
 
-        }
-
-        public void generateNotification(Noticia noticia) {
+         }
+        public void generateNotification(Evento evento) {
 
             Log.i("Start", "notification");
 
@@ -301,19 +307,19 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
             NotificationCompat.Builder  mBuilder =
                     new NotificationCompat.Builder(getActivity().getApplicationContext());
 
-            mBuilder.setContentTitle("Nova noticia");
-            mBuilder.setContentText(noticia.getTitulo());
-            mBuilder.setTicker("Noticia !!!");
-//            mBuilder.setSmallIcon(R.drawable.logo);
+            mBuilder.setContentTitle("Novo evento");
+            mBuilder.setContentText(evento.getNome());
+            mBuilder.setTicker("Evento !!!");
+            mBuilder.setSmallIcon(R.drawable.ic_launcher);
 
       /* Increase notification number every time a new notification arrives */
             mBuilder.setNumber(++numMessages);
 
       /* Creates an explicit intent for an Activity in your app */
             Intent resultIntent = new Intent(getActivity().getApplicationContext(), MyActivity.class);
-            resultIntent.setAction("NOTICIA"); //tentando linkar
+            resultIntent.setAction("EVENTO"); //tentando linkar
             Bundle bundle = new Bundle();
-            bundle.putSerializable("noticia",noticia);
+            bundle.putSerializable("evento",evento);
             resultIntent.putExtras(bundle);
             // fim arrumar a inteçao
 
@@ -336,9 +342,10 @@ public class FragmentNoticias extends Fragment implements AdapterView.OnItemClic
                             getSystemService(getActivity().getApplication().NOTIFICATION_SERVICE);
 
       /* notificationID allows you to update the notification later on. */
-            mNotificationManager.notify(noticia.getCodigo(), mBuilder.build());
+            mNotificationManager.notify(evento.getCodigo(), mBuilder.build());
         }
+
     }
 
-
 }
+

@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 
+import com.app.fagner.myapplication.evento.view.FragmentEvento;
+import com.app.fagner.myapplication.evento.view.FragmentEventoConfrimados;
+import com.app.fagner.myapplication.evento.view.FragmentEventos;
+import com.app.fagner.myapplication.modelo.Evento;
 import com.app.fagner.myapplication.modelo.FragmentListener;
 import com.app.fagner.myapplication.modelo.Noticia;
 
@@ -24,7 +28,7 @@ import java.io.IOException;
 public class MyActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,FragmentListener {
 
-    static DataBaseHelper db;
+    public static DataBaseHelper db;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -70,16 +74,9 @@ public class MyActivity extends ActionBarActivity
         if(position==1){
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                    .replace(R.id.container, new FragmentEventos())
                     .commit();
         }
-        if(position==2){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                    .commit();
-        }
-
     }
 
     public void onSectionAttached(int number) {
@@ -88,11 +85,11 @@ public class MyActivity extends ActionBarActivity
                 mTitle = "Noticia";
                 break;
             case 2:
-                mTitle = "Minhas Disciplinas";
+                mTitle = "Eventos";
                 break;
-            case 3:
-                mTitle = "Cursos";
-                break;
+//            case 3:
+//                mTitle = "Cursos";
+//                break;
         }
     }
 
@@ -191,4 +188,23 @@ public class MyActivity extends ActionBarActivity
 
     }
 
+    @Override
+    public void callbackEvento(Evento evento) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, FragmentEvento.newInstance(evento))
+                .commit();
+
+
+    }
+
+    @Override
+    public void callbackEventoConfirmados(Evento evento) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, FragmentEventoConfrimados.newInstance(evento.getCodigo()))
+                .commit();
+
+
+    }
 }

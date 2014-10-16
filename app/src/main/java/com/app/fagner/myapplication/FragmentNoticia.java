@@ -3,6 +3,7 @@ package com.app.fagner.myapplication;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public class FragmentNoticia extends Fragment {
         TextView descricao = (TextView) view.findViewById(R.id.textView_noticia_descricao);
 
         assunto.setText(noticia.getTitulo());
+        descricao.setMovementMethod(new ScrollingMovementMethod());
         descricao.setText(noticia.getConteudo());
 
         return view;

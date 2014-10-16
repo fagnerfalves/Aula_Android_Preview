@@ -14,8 +14,9 @@ import android.widget.EditText;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener{
-    String mat;
+    String mat,nick;
     EditText editmatricula;
+    EditText editnick;
     Button ok;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,16 +24,23 @@ public class LoginActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_mylugao);
 
         editmatricula = (EditText) findViewById(R.id.editTextMatricula);
+        editnick = (EditText) findViewById(R.id.editTextNick);
         ok = (Button) findViewById(R.id.button);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("aula.eccard.prefs", Context.MODE_PRIVATE);
         mat = sharedPreferences.getString("matricula", "");
+        nick = sharedPreferences.getString("nick", "");
 
         // se a matricula tiver sido iniciada anteriormente setar esta matricula
         if(!mat.equals("")){
             Log.i("entrou", "entrour");
             editmatricula.setText(mat);
         }
+        if(!nick.equals("")){
+            Log.i("entrou", "entrour");
+            editnick.setText(nick);
+        }
+
         ok.setOnClickListener(this);
     }
 
@@ -63,8 +71,8 @@ public class LoginActivity extends Activity implements View.OnClickListener{
                 SharedPreferences sharedPreferences = this.getSharedPreferences("aula.eccard.prefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("matricula",editmatricula.getText().toString());
+                editor.putString("nick",editnick.getText().toString());
                 editor.commit();
-
 
                 Intent i = new Intent(this, MyActivity.class);
                 startActivity(i);

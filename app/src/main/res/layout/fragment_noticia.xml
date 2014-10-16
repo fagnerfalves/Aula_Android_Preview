@@ -23,5 +23,7 @@
         android:layout_below="@+id/textView_noticia_assunto"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
-        android:gravity="center_horizontal" />
+        android:gravity="left|center_horizontal"
+        android:maxLines="300"
+        android:scrollbars="vertical"/>
 </RelativeLayout>

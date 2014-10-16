@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.app.fagner.myapplication.modelo.Evento;
 import com.app.fagner.myapplication.modelo.Noticia;
 
 import java.io.FileOutputStream;
@@ -23,7 +24,8 @@ import java.util.ArrayList;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static String DB_PATH="/data/data/com.app.fagner.myapplication/";
-    private static String DB_NAME = "banco.db";
+//    private static String DB_NAME = "banco.db";
+    private static String DB_NAME = "Aula_android.db";
     public SQLiteDatabase dbQuery;
     private final Context dbContexto;
 
@@ -162,5 +164,58 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         Cursor cursor = dbQuery.rawQuery("SELECT MAX(_id) FROM Noticia",null);
         cursor.moveToFirst();
         return cursor.getInt(0);
+    }
+    // eventos
+
+    public ArrayList<Evento> getEventos(){
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+
+        Cursor cursor = dbQuery.rawQuery("select * from evento", null);
+        // codigo,assunto,dataExpedida,horaExpedida,cursoRelacionado,descricao
+        // cod,nome,descricao,organizadores,local,data,hora,confirmados
+        if (cursor.moveToFirst()) {
+            do {
+
+                eventos.add(new Evento(cursor.getInt(0), cursor.getString(1),
+                        cursor.getString(2), cursor.getString(3), cursor
+                        .getString(4), cursor.getString(5),cursor.getString(6),cursor.getInt(7)
+                ));
+            } while (cursor.moveToNext());
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+//        for(int i=0; i<eventos.size();i++){
+//            Log.i("eventos",eventos.get(i).getNome());
+//        }
+        return eventos;
+    }
+    public int getCodigoUltimoEvento(){
+//        Cursor cursor = dbQuery.rawQuery("SELECT MAX(cod) FROM evento",null);
+        Cursor cursor = dbQuery.rawQuery("SELECT MAX(_id) FROM evento",null);
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+    }
+
+    public void criarEvento(Evento evento){
+        Log.i("entrando no criarção da noticia","entrando criação noticiaaaaaaaaaaaaaaaa");
+        this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+//        values.put("cod",evento.getCodigo());
+        values.put("_id",evento.getCodigo());
+        values.put("nome",evento.getNome());
+        values.put("descricao",evento.getDescricao());
+        values.put("organizadores",evento.getOrganizadores());
+        values.put("local",evento.getLocal());
+        values.put("data",evento.getData());
+        values.put("hora",evento.getHora());
+        values.put("presenca",evento.getPresenca());
+        try{
+            dbQuery.insert("evento",null,values);
+        }catch (SQLException e){
+            Log.i(e.toString(),e.toString());
+        }
     }
 }

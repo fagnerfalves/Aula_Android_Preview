@@ -1,4 +1,4 @@
-package com.app.fagner.myapplication;
+package com.app.fagner.myapplication.conexao;
 
 /**
  * Created by eccard on 7/24/14.
